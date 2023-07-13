@@ -134,7 +134,7 @@ def start_all_tunnels(wg_peers_dict: dict, config_files: list) -> None:
 def main() -> None:
     """The starting point of the program"""
 
-    # This clas gives you the full help message when supplying a faulty argument
+    # This class gives you the full help message when supplying a faulty argument
     class MyParser(argparse.ArgumentParser):
         """Class to provide full help message when supplying a faulty argument"""
         def error(self, message):
@@ -142,7 +142,7 @@ def main() -> None:
             self.print_help()
             sys.exit(2)
 
-    msg = "This is a wrapper arround wireguard-tools with the listed options below:"
+    msg = "This is a wrapper around wireguard-tools with the listed options below:"
     parser = MyParser(description=msg, prog="wg-wrapper")
     parser.add_argument(
         "-l", "--list", action="store_true", help="List all currently active tunnels"
