@@ -13,6 +13,7 @@ import sys
 # Define color codes
 class Bcolors:
     """Class to allow for custom colors in print statements"""
+
     OKCYAN = "\033[96m"
     OKGREEN = "\033[92m"
     WARNING = "\033[93m"
@@ -32,7 +33,7 @@ def parse_wg_config_files(wg_config_path: str, debug: bool):
                         f"\n{Bcolors.WARNING}DEBUG: found the following filename: {filename.name}{Bcolors.ENDC}"
                     )
                 config_object = configparser.ConfigParser()
-                with open(filename.path, "r", encoding='UTF-8') as file:
+                with open(filename.path, "r", encoding="UTF-8") as file:
                     config_object.read_file(file)
                     output_dict = {
                         s: dict(config_object.items(s))
@@ -131,7 +132,7 @@ def start_all_tunnels(wg_peers_dict: dict, config_files: list) -> None:
     print(f"\n{Bcolors.OKCYAN}========================={Bcolors.ENDC}")
 
 
-def list_wg_configfiles (config_files: list, wg_config_path: str) -> None:
+def list_wg_configfiles(config_files: list, wg_config_path: str) -> None:
     """Print the config files in wg_config_path"""
     print(f"\n{Bcolors.OKCYAN}===List all wg-config files==={Bcolors.ENDC}\n")
     print(f"wg config-file path: {wg_config_path}")
@@ -149,6 +150,7 @@ def main() -> None:
     # This class gives you the full help message when supplying a faulty argument
     class MyParser(argparse.ArgumentParser):
         """Class to provide full help message when supplying a faulty argument"""
+
         def error(self, message):
             sys.stderr.write(f"error: {message}\n")
             self.print_help()
@@ -163,7 +165,7 @@ def main() -> None:
         "-c",
         "--configfiles",
         action="store_true",
-        help="List all configfiles in wg_config_path"
+        help="List all configfiles in wg_config_path",
     )
     parser.add_argument(
         "-s",
