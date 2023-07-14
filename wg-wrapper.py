@@ -131,6 +131,18 @@ def start_all_tunnels(wg_peers_dict: dict, config_files: list) -> None:
     print(f"\n{Bcolors.OKCYAN}========================={Bcolors.ENDC}")
 
 
+def list_wg_configfiles (config_files: list, wg_config_path: str) -> None:
+    """Print the config files in wg_config_path"""
+    print(f"\n{Bcolors.OKCYAN}===List all wg-config files==={Bcolors.ENDC}\n")
+    print(f"wg config-file path: {wg_config_path}")
+    if len(config_files) > 0:
+        for file in config_files:
+            print(f'{file["filename"]}')
+    else:
+        print("No active VPN peers was found")
+    print(f"\n{Bcolors.OKCYAN}=============================={Bcolors.ENDC}")
+
+
 def main() -> None:
     """The starting point of the program"""
 
@@ -146,6 +158,12 @@ def main() -> None:
     parser = MyParser(description=msg, prog="wg-wrapper")
     parser.add_argument(
         "-l", "--list", action="store_true", help="List all currently active tunnels"
+    )
+    parser.add_argument(
+        "-c",
+        "--configfiles",
+        action="store_true",
+        help="List all configfiles in wg_config_path"
     )
     parser.add_argument(
         "-s",
@@ -191,6 +209,8 @@ def main() -> None:
         start_all_tunnels(wg_peers_dict, config_files)
     if args.kill:
         kill_active_tunnels(wg_peers_dict, config_files)
+    if args.configfiles:
+        list_wg_configfiles(config_files, wg_config_path)
 
 
 if __name__ == "__main__":
