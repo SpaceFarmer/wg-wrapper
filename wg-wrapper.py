@@ -90,7 +90,9 @@ def list_active_tunnels(wg_peers_dict: dict, config_files: list) -> None:
     print(f"{Bcolors.OKCYAN}======================================{Bcolors.ENDC}")
 
 
-def kill_active_tunnels(wg_peers_dict: dict, config_files: list, kill_exceptions_list: list) -> None:
+def kill_active_tunnels(
+    wg_peers_dict: dict, config_files: list, kill_exceptions_list: list
+) -> None:
     """This function kills all currently active tunnels"""
     print(f"\n{Bcolors.OKCYAN}===Kill all active tunnels==={Bcolors.ENDC}\n")
     if len(wg_peers_dict) > 1:
@@ -106,13 +108,17 @@ def kill_active_tunnels(wg_peers_dict: dict, config_files: list, kill_exceptions
                             f"sudo wg-quick down {file_shortname}", shell=True
                         ).decode("utf-8")
                     else:
-                        print(f"{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}")
+                        print(
+                            f"{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}"
+                        )
     else:
         print("No active VPN peers was found")
     print(f"\n{Bcolors.OKCYAN}============================={Bcolors.ENDC}")
 
 
-def start_all_tunnels(wg_peers_dict: dict, config_files: list, start_exceptions_list: list) -> None:
+def start_all_tunnels(
+    wg_peers_dict: dict, config_files: list, start_exceptions_list: list
+) -> None:
     """This function starts all tunnels that there is config for in wg_config_path"""
     print(f"\n{Bcolors.OKCYAN}=== Start all tunnels ==={Bcolors.ENDC}")
     if len(wg_peers_dict) >= len(config_files):
@@ -129,7 +135,9 @@ def start_all_tunnels(wg_peers_dict: dict, config_files: list, start_exceptions_
                         f"sudo wg-quick up {file_shortname}", shell=True
                     ).decode("utf-8")
                 else:
-                    print(f"{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}")
+                    print(
+                        f"{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}"
+                    )
             elif file["Peer"]["publickey"] in wg_peers_dict.values():
                 print(f"Tunnel for file is already started: {file['filename']}")
             else:
@@ -207,17 +215,19 @@ def main() -> None:
         config = configparser.ConfigParser()
         config.read(f"{script_dir}/config.ini")
         # Get the path to tunnel config files
-        wg_config_path = config['DEFAULT']['WireGuardConfigFilesPath']
+        wg_config_path = config["DEFAULT"]["WireGuardConfigFilesPath"]
         # Get tunnel "start all" exceptions
-        start_exceptions = (config['EXCEPTIONS']['StartAllTunnelsExceptions']).replace(' ','')
+        start_exceptions = (config["EXCEPTIONS"]["StartAllTunnelsExceptions"]).replace(
+            " ", ""
+        )
         start_exceptions_list = start_exceptions.split(",")
         # Get tunnel "kill all" exceptions
-        kill_exceptions = (config['EXCEPTIONS']['KillAllTunnelsExceptions']).replace(' ','')
+        kill_exceptions = (config["EXCEPTIONS"]["KillAllTunnelsExceptions"]).replace(
+            " ", ""
+        )
         kill_exceptions_list = kill_exceptions.split(",")
     else:
-        print(
-            f"{Bcolors.FAIL}Could not find the config.ini file{Bcolors.ENDC}"
-        )
+        print(f"{Bcolors.FAIL}Could not find the config.ini file{Bcolors.ENDC}")
         sys.exit(1)
 
     if os.path.isdir(wg_config_path):
