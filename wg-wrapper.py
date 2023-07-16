@@ -194,9 +194,8 @@ def main() -> None:
 
     # Get the path for the script beeing executed
     script_dir = os.path.dirname(__file__)
-    # Get the path to the WG config files from config.ini
+    # Read contents of config.ini
     if os.path.isfile(f"{script_dir}/config.ini"):
-        # Read contents of config.ini
         config = configparser.ConfigParser()
         config.read(f"{script_dir}/config.ini")
         wg_config_path = config['DEFAULT']['WireGuardConfigFilesPath']
