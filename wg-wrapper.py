@@ -192,8 +192,19 @@ def main() -> None:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    # Path to the WG config files, change this if your config files are stores elsewhere
-    wg_config_path = "/opt/homebrew/etc/wireguard"
+    # Get the path for the script beeing executed
+    script_dir = os.path.dirname(__file__)
+    # Get the path to the WG config files from config.ini
+    if os.path.isfile(f"{script_dir}/config.ini"):
+        # Read contents of config.ini
+        config = configparser.ConfigParser()
+        config.read(f"{script_dir}/config.ini")
+        wg_config_path = config['DEFAULT']['WireGuardConfigFilesPath']
+    else:
+        print(
+            f"{Bcolors.FAIL}Could not find the config.ini file{Bcolors.ENDC}"
+        )
+        sys.exit(1)
 
     if os.path.isdir(wg_config_path):
         # Parse the wg configfiles and get currently active peers used in the other functions
