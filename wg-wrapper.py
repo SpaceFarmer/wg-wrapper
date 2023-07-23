@@ -1,3 +1,4 @@
+"""python wrapper around wg-tools"""
 #!/usr/bin/env python3
 # pylint: disable=invalid-name
 # pylint: enable=invalid-name
@@ -21,7 +22,34 @@ class Bcolors:
     ENDC = "\033[0m"
 
 
-def parse_wg_config_files(wg_config_path: str, debug: bool):
+def get_wg_peers(debug: bool) -> dict:
+    """This function returns a dict of all currently active VPN-peers"""
+    # Get active WG peers
+    active_wg_peers = subprocess.check_output(
+        "sudo wg show all peers", shell=True
+    ).decode("utf-8")
+    active_wg_peers_list = active_wg_peers.split()
+    if debug:
+        print(
+            f"\n{Bcolors.WARNING}DEBUG: list active peers from (wg show all peers):{Bcolors.ENDC}\n{active_wg_peers}"
+        )
+
+    # Create a dict with the active wg peers using the utun interface as key and pub-key as value.
+    # This is used in other functions to be able to list, include and exclude active peers.
+    wg_peers_dict = {}
+    i = 0
+    while i < len(active_wg_peers_list):
+        wg_peers_dict[active_wg_peers_list[i]] = active_wg_peers_list[i + 1]
+        i = i + 2
+    if debug:
+        print(
+            f"\n{Bcolors.WARNING}DEBUG: wg_peers_dict content:\n{wg_peers_dict}{Bcolors.ENDC}"
+        )
+
+    return wg_peers_dict
+
+
+def parse_wg_config_files(wg_config_path: str, debug: bool) -> list:
     """This function parses wg-config files and creates a dict of currently active VPN-peers"""
     # Parse wg config files
     config_files = []
@@ -49,29 +77,7 @@ def parse_wg_config_files(wg_config_path: str, debug: bool):
             p_print = pprint.PrettyPrinter(indent=4, depth=2)
             p_print.pprint(file)
 
-    # Get active WG peers
-    active_wg_peers = subprocess.check_output(
-        "sudo wg show all peers", shell=True
-    ).decode("utf-8")
-    active_wg_peers_list = active_wg_peers.split()
-    if debug:
-        print(
-            f"\n{Bcolors.WARNING}DEBUG: list active peers from (wg show all peers):{Bcolors.ENDC}\n{active_wg_peers}"
-        )
-
-    # Create a dict with the active wg peers using the utun interface as key and pub-key as value.
-    # This is used in other functions to be able to list, include and exclude active peers.
-    wg_peers_dict = {}
-    i = 0
-    while i < len(active_wg_peers_list):
-        wg_peers_dict[active_wg_peers_list[i]] = active_wg_peers_list[i + 1]
-        i = i + 2
-    if debug:
-        print(
-            f"\n{Bcolors.WARNING}DEBUG: wg_peers_dict content:\n{wg_peers_dict}{Bcolors.ENDC}"
-        )
-
-    return wg_peers_dict, config_files
+    return config_files
 
 
 def list_active_tunnels(wg_peers_dict: dict, config_files: list) -> None:
@@ -230,9 +236,12 @@ def main() -> None:
         print(f"{Bcolors.FAIL}Could not find the config.ini file{Bcolors.ENDC}")
         sys.exit(1)
 
+    # Get all active wg-peers
+    wg_peers_dict = get_wg_peers(args.debug)
+
     if os.path.isdir(wg_config_path):
         # Parse the wg configfiles and get currently active peers used in the other functions
-        wg_peers_dict, config_files = parse_wg_config_files(wg_config_path, args.debug)
+        config_files = parse_wg_config_files(wg_config_path, args.debug)
     else:
         print(
             f"{Bcolors.FAIL}The path defined for wg config-files does not exist: {wg_config_path}{Bcolors.ENDC}"
