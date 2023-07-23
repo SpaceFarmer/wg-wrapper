@@ -1,7 +1,7 @@
-"""python wrapper around wg-tools"""
 #!/usr/bin/env python3
 # pylint: disable=invalid-name
 # pylint: enable=invalid-name
+"""python wrapper around wg-tools"""
 
 import argparse
 import configparser
