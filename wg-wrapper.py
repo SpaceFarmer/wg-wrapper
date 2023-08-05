@@ -166,6 +166,70 @@ def list_wg_configfiles(config_files: list, wg_config_path: str) -> None:
     print(f"\n{Bcolors.OKCYAN}=============================={Bcolors.ENDC}")
 
 
+def generate_wg_keys(wg_config_path: str) -> None:
+    """Generates wg keys for use in a new wg tunnel"""
+    print(f"\n{Bcolors.OKCYAN}===Generate new WireGuard keys==={Bcolors.ENDC}\n")
+    print("Generating public and private keys for new wg-tunnel config...")
+
+    # Warn if files already exists
+    yes_choices = ["yes", "y"]
+    no_choices = ["no", "n"]
+    if os.path.isfile(f"{wg_config_path}/public.key"):
+        print(
+            f"{Bcolors.WARNING}Public key file already exists, continue and overwrite existing file?{Bcolors.ENDC} {wg_config_path}/public.key"
+        )
+        while True:
+            user_input = input("Overwrite y/n? ")
+            if user_input.lower() in yes_choices:
+                print("Continuing...")
+                break
+            if user_input.lower() in no_choices:
+                print("Aborting key-generation...")
+                sys.exit(1)
+            else:
+                print('Invalid input, type "y" or "n"')
+                continue
+    if os.path.isfile(f"{wg_config_path}/private.key"):
+        print(
+            f"{Bcolors.WARNING}Private key file already exists, continue and overwrite existing file?{Bcolors.ENDC} {wg_config_path}/private.key"
+        )
+        while True:
+            user_input = input("Overwrite y/n? ")
+            if user_input.lower() in yes_choices:
+                print("Continuing...")
+                break
+            if user_input.lower() in no_choices:
+                print("Aborting key-generation...")
+                sys.exit(1)
+            else:
+                print('Invalid input, type "y" or "n"')
+                continue
+
+    # Generate a new public and private wg-key and make sure only the user has permissions on the files
+    subprocess.check_output(
+        f"umask 077 && wg genkey | tee {wg_config_path}/private.key | wg pubkey > {wg_config_path}/public.key",
+        shell=True,
+    )
+
+    print("The keys are now generated and located here:")
+    if os.path.isfile(f"{wg_config_path}/public.key"):
+        print(f"{wg_config_path}/public.key")
+    else:
+        print(
+            f"{Bcolors.FAIL}The file with the public key could not be found: {wg_config_path}/public.key{Bcolors.ENDC}"
+        )
+        sys.exit(1)
+    if os.path.isfile(f"{wg_config_path}/private.key"):
+        print(f"{wg_config_path}/private.key")
+    else:
+        print(
+            f"{Bcolors.FAIL}The file with the private key could not be found: {wg_config_path}/private.key{Bcolors.ENDC}"
+        )
+        sys.exit(1)
+
+    print(f"\n{Bcolors.OKCYAN}================================={Bcolors.ENDC}")
+
+
 def main() -> None:
     """The starting point of the program"""
 
@@ -200,6 +264,12 @@ def main() -> None:
         "--kill",
         action="store_true",
         help="Kill all active tunnels defined in wg_config_path",
+    )
+    parser.add_argument(
+        "-g",
+        "--generate",
+        action="store_true",
+        help="Generete new wg keys for use in new tunnel config",
     )
     parser.add_argument(
         "-d",
@@ -257,6 +327,8 @@ def main() -> None:
         kill_active_tunnels(wg_peers_dict, config_files, kill_exceptions_list)
     if args.configfiles:
         list_wg_configfiles(config_files, wg_config_path)
+    if args.generate:
+        generate_wg_keys(wg_config_path)
 
 
 if __name__ == "__main__":
