@@ -11,6 +11,7 @@ Wrapper around wireguard-tools
 | --configfiles | List all the wg-configfiles found in wg_config_path           |
 | --start       | This will start all wg-tunnels that we find config files for  |
 | --kill        | This will kill all active wg-tunnels                          |
+| --generate    | Generate new WireGuard keys for use in new tunnel config      |
 | --debug       | Print debug oriented output (private keys will be printed)    |
 
 ### Exceptions in config.ini
