@@ -137,9 +137,13 @@ def start_all_tunnels(
                 if file["filename"] not in start_exceptions_list:
                     file_shortname = file["filename"].split(".", 1)[0]
                     print(f"\nStarting tunnel: {file_shortname}")
-                    subprocess.check_output(
-                        f"sudo wg-quick up {file_shortname}", shell=True
-                    ).decode("utf-8")
+                    try:
+                        subprocess.check_output(
+                            f"sudo wg-quick up {file_shortname}", shell=True
+                        ).decode("utf-8")
+                    except subprocess.CalledProcessError as e:
+                        print(f"{Bcolors.FAIL}Error occured while trying to start tunnel: {file_shortname}{Bcolors.ENDC}")
+                        print(f"{Bcolors.FAIL}Error returncode: {e.returncode}{Bcolors.ENDC}")
                 else:
                     print(
                         f"{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}"
