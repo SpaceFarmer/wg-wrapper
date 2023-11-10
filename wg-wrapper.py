@@ -115,7 +115,7 @@ def kill_active_tunnels(
                         ).decode("utf-8")
                     else:
                         print(
-                            f"{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}"
+                            f"\n{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}"
                         )
     else:
         print("No active VPN peers was found")
@@ -142,11 +142,15 @@ def start_all_tunnels(
                             f"sudo wg-quick up {file_shortname}", shell=True
                         ).decode("utf-8")
                     except subprocess.CalledProcessError as e:
-                        print(f"{Bcolors.FAIL}Error occured while trying to start tunnel: {file_shortname}{Bcolors.ENDC}")
-                        print(f"{Bcolors.FAIL}Error returncode: {e.returncode}{Bcolors.ENDC}")
+                        print(
+                            f"{Bcolors.FAIL}Error occured while trying to start tunnel: {file_shortname}{Bcolors.ENDC}"
+                        )
+                        print(
+                            f"{Bcolors.FAIL}Error returncode: {e.returncode}{Bcolors.ENDC}"
+                        )
                 else:
                     print(
-                        f"{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}"
+                        f"\n{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}"
                     )
             elif file["Peer"]["publickey"] in wg_peers_dict.values():
                 print(f"Tunnel for file is already started: {file['filename']}")
