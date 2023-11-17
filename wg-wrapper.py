@@ -253,7 +253,7 @@ def main() -> None:
     msg = "This is a wrapper around wireguard-tools with the listed options below:"
     parser = MyParser(description=msg, prog="wg-wrapper")
     parser.add_argument(
-        "-l", "--list", action="store_true", help="List all currently active tunnels"
+        "-l", "--list", action="store_true", help="List all currently active tunnels defined in wg_config_path"
     )
     parser.add_argument(
         "-c",
@@ -265,7 +265,7 @@ def main() -> None:
         "-s",
         "--start",
         action="store_true",
-        help="Start all tunnels in the wg_config_path",
+        help="Start all tunnels defined in wg_config_path",
     )
     parser.add_argument(
         "-k",

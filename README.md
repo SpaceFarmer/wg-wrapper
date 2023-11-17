@@ -4,15 +4,15 @@ Wrapper around wireguard-tools
 ## Functions
 
 ### Options
-| Option        | What it does                                                  |
-|---------------|---------------------------------------------------------------|
-| --help        | Show help message                                             |
-| --list        | List all currently active tunnels wireguard tunnels           |
-| --configfiles | List all the wg-configfiles found in wg_config_path           |
-| --start       | This will start all wg-tunnels that we find config files for  |
-| --kill        | This will kill all active wg-tunnels                          |
-| --generate    | Generate new WireGuard keys for use in new tunnel config      |
-| --debug       | Print debug oriented output (private keys will be printed)    |
+| Option        | What it does                                                                  |
+|---------------|-------------------------------------------------------------------------------|
+| --help        | Show help message                                                             |
+| --list        | List all currently active tunnels wireguard tunnels defined in wg_config_path |
+| --configfiles | List all the wg-configfiles found in wg_config_path                           |
+| --start       | This will start all wg-tunnels that we find config files for in wg_config_path|
+| --kill        | This will kill all active wg-tunnels defined in wg_config_path                |
+| --generate    | Generate new WireGuard keys for use in new tunnel config                      |
+| --debug       | Print debug oriented output (private keys will be printed)                    |
 
 ### Exceptions in config.ini
 If you have lots of tunnels and tunnel configurations and for some reason dont want to start all or kill all with the `--start` or `--kill` options, there is a way to exclude those in the `config.ini`.
