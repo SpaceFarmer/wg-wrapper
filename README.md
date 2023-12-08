@@ -1,5 +1,5 @@
 # wg-wrapper
-Wrapper around wireguard-tools
+Wrapper around [wireguard-tools](https://www.wireguard.com/install/). It makes it easier to handle multiple tunnels simultaneously.
 
 ## Functions
 
@@ -10,7 +10,7 @@ Wrapper around wireguard-tools
 | --list        | List all currently active tunnels wireguard tunnels defined in wg_config_path |
 | --configfiles | List all the wg-configfiles found in wg_config_path                           |
 | --start       | This will start all wg-tunnels that we find config files for in wg_config_path|
-| --kill        | This will kill all active wg-tunnels defined in wg_config_path                |
+| --kill        | This will kill all active wg-tunnels we fin config files for in wg_config_path|
 | --generate    | Generate new WireGuard keys for use in new tunnel config                      |
 | --debug       | Print debug oriented output (private keys will be printed)                    |
 
@@ -20,7 +20,7 @@ If you have lots of tunnels and tunnel configurations and for some reason dont w
 * `KillAllTunnelsExceptions =` A comma separeted list of config-file names
 
 ## Pre-req's
-* Have wg-tools installed
+* Have `wireguard-tools` installed
 * Have a supported python3 version installed
 * This is only tested on macOS
 
