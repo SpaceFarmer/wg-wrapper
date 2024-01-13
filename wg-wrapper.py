@@ -101,7 +101,7 @@ def kill_active_tunnels(
 ) -> None:
     """This function kills all currently active tunnels"""
     print(f"\n{Bcolors.OKCYAN}===Kill all active tunnels==={Bcolors.ENDC}\n")
-    if len(wg_peers_dict) > 1:
+    if len(wg_peers_dict) >= 1:
         for active_peer in wg_peers_dict:
             for file in config_files:
                 if wg_peers_dict[active_peer] == file["Peer"]["publickey"]:
