@@ -83,7 +83,7 @@ def parse_wg_config_files(wg_config_path: str, debug: bool) -> list:
 def list_active_tunnels(wg_peers_dict: dict, config_files: list) -> None:
     """This function prints all currently active tunnels on screen"""
     print(f"\n{Bcolors.OKCYAN}=== The following peers are active ==={Bcolors.ENDC}\n")
-    if len(wg_peers_dict) > 1:
+    if len(wg_peers_dict) >= 1:
         for active_peer in wg_peers_dict:
             for file in config_files:
                 if wg_peers_dict[active_peer] == file["Peer"]["publickey"]:
@@ -253,7 +253,10 @@ def main() -> None:
     msg = "This is a wrapper around wireguard-tools with the listed options below:"
     parser = MyParser(description=msg, prog="wg-wrapper")
     parser.add_argument(
-        "-l", "--list", action="store_true", help="List all currently active tunnels defined in wg_config_path"
+        "-l",
+        "--list",
+        action="store_true",
+        help="List all currently active tunnels defined in wg_config_path",
     )
     parser.add_argument(
         "-c",
