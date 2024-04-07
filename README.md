@@ -1,5 +1,7 @@
 # wg-wrapper
-Wrapper around [wireguard-tools](https://www.wireguard.com/install/). It makes it easier to handle multiple tunnels simultaneously.
+Wrapper around [wireguard-tools](https://www.wireguard.com/install/) with the intention to make it easier to handle multiple tunnels simultaneously.
+
+<img src="https://github.com/SpaceFarmer/wg-wrapper/assets/12208962/15cc6618-ce04-4f26-8e9f-11cbe5d3faff" width=40% height=40%>
 
 ## Functions
 
