@@ -28,7 +28,7 @@ If you have lots of tunnels and tunnel configurations and for some reason dont w
 
 ## How to use
 * Clone the repo or download the files needed (`wg-wrapper.py` and `config.ini`)
-* Make sure the `WireGuardConfigFilesPath` in `config.ini` matches the path for your config files
+* Make sure the `WireGuardConfigFilesPath` in `config.ini` matches the path for your config files. Supported paths can be found by running the command `wg-quick`
 * Execute by running `wg-wrapper.py --<option>` in the terminal
 
 ### Optional
