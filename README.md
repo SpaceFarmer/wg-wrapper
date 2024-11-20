@@ -12,7 +12,7 @@ Wrapper around [wireguard-tools](https://www.wireguard.com/install/) with the in
 | --list        | List all currently active tunnels wireguard tunnels defined in wg_config_path |
 | --configfiles | List all the wg-configfiles found in wg_config_path                           |
 | --start       | This will start all wg-tunnels that we find config files for in wg_config_path|
-| --kill        | This will kill all active wg-tunnels we fin config files for in wg_config_path|
+| --kill        | This will kill all active wg-tunnels we find config files for in wg_config_path|
 | --generate    | Generate new WireGuard keys for use in new tunnel config                      |
 | --debug       | Print debug oriented output (private keys will be printed)                    |
 
