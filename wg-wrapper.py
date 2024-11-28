@@ -55,7 +55,7 @@ def parse_wg_config_files(wg_config_path: str, debug: bool) -> list:
     config_files = []
     for filename in os.scandir(wg_config_path):
         if filename.is_file():
-            if ".conf" in filename.name:
+            if filename.name.endswith(".conf"):
                 if debug:
                     print(
                         f"\n{Bcolors.WARNING}DEBUG: found the following filename: {filename.name}{Bcolors.ENDC}"
