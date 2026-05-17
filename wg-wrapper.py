@@ -304,15 +304,17 @@ def main() -> None:
         # Get the path to tunnel config files
         wg_config_path = config["DEFAULT"]["WireGuardConfigFilesPath"]
         # Get tunnel "start all" exceptions
-        start_exceptions = (config["EXCEPTIONS"]["StartAllTunnelsExceptions"]).replace(
-            " ", ""
-        )
-        start_exceptions_list = start_exceptions.split(",")
+        start_exceptions_list = [
+            x.strip()
+            for x in config["EXCEPTIONS"]["StartAllTunnelsExceptions"].split(",")
+            if x.strip()
+        ]
         # Get tunnel "kill all" exceptions
-        kill_exceptions = (config["EXCEPTIONS"]["KillAllTunnelsExceptions"]).replace(
-            " ", ""
-        )
-        kill_exceptions_list = kill_exceptions.split(",")
+        kill_exceptions_list = [
+            x.strip()
+            for x in config["EXCEPTIONS"]["KillAllTunnelsExceptions"].split(",")
+            if x.strip()
+        ]
     else:
         print(f"{Bcolors.FAIL}Could not find the config.ini file{Bcolors.ENDC}")
         sys.exit(1)
