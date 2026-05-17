@@ -106,25 +106,44 @@ def kill_active_tunnels(
     wg_peers_dict: dict, config_files: list, kill_exceptions_list: list
 ) -> None:
     """This function kills all currently active tunnels"""
+
     print(f"\n{Bcolors.OKCYAN}===Kill all active tunnels==={Bcolors.ENDC}\n")
-    if len(wg_peers_dict) >= 1:
-        for active_peer in wg_peers_dict:
-            for file in config_files:
-                if wg_peers_dict[active_peer] == file["Peer"]["publickey"]:
-                    # Exlude exceptions found in config.ini
-                    if file["filename"] not in kill_exceptions_list:
-                        # Get the first part of the filename (whithout .conf)
-                        file_shortname = file["filename"].split(".", 1)[0]
-                        print(f"==Killing tunnel: {file_shortname}==")
-                        subprocess.check_output(
-                            f"sudo wg-quick down {file_shortname}", shell=True
-                        ).decode("utf-8")
-                    else:
-                        print(
-                            f"\n{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}"
-                        )
-    else:
+
+    if not wg_peers_dict:
         print("No active VPN peers was found")
+        print(f"\n{Bcolors.OKCYAN}============================={Bcolors.ENDC}")
+        return
+
+    active_pubkeys = set(wg_peers_dict.values())
+
+    for file in config_files:
+        peer = file.get("Peer")
+        if not peer:
+            print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
+            continue
+
+        pubkey = peer.get("publickey")
+        if not pubkey:
+            print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
+            continue
+
+        if pubkey not in active_pubkeys:
+            continue  # not active → nothing to kill
+
+        if file["filename"] in kill_exceptions_list:
+            print(
+                f"\n{Bcolors.WARNING}Excepted tunnel config found, not killing: {file['filename']}{Bcolors.ENDC}"
+            )
+            continue
+
+        file_shortname = file["filename"].split(".", 1)[0]
+        print(f"==Killing tunnel: {file_shortname}==")
+
+        subprocess.run(
+            ["sudo", "wg-quick", "down", file_shortname],
+            check=True,
+        )
+
     print(f"\n{Bcolors.OKCYAN}============================={Bcolors.ENDC}")
 
 
@@ -137,8 +156,17 @@ def start_all_tunnels(
         print("\nAll tunnels are already started")
     elif len(wg_peers_dict) < len(config_files):
         for file in config_files:
+            # Sanity checks
+            peer = file.get("Peer")
+            if not peer:
+                print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
+                continue
+            pubkey = peer.get("publickey")
+            if not pubkey:
+                print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
+                continue
             # for active_peer in wg_peers_dict:
-            if file["Peer"]["publickey"] not in wg_peers_dict.values():
+            if pubkey not in wg_peers_dict.values():
                 # Exlude exceptions found in config.ini
                 if file["filename"] not in start_exceptions_list:
                     file_shortname = file["filename"].split(".", 1)[0]
@@ -158,7 +186,7 @@ def start_all_tunnels(
                     print(
                         f"\n{Bcolors.WARNING}Excepted tunnel config found, not starting: {file['filename']}{Bcolors.ENDC}"
                     )
-            elif file["Peer"]["publickey"] in wg_peers_dict.values():
+            elif pubkey in wg_peers_dict.values():
                 print(f"Tunnel for file is already started: {file['filename']}")
             else:
                 print(
