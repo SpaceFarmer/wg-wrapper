@@ -34,7 +34,6 @@ def get_wg_peers(debug: bool) -> dict:
             f"\n{Bcolors.WARNING}DEBUG: list active peers from (wg show all peers):{Bcolors.ENDC}\n{active_wg_peers}"
         )
 
-
     # Safety check: must be even number of elements
     if len(active_wg_peers_list) % 2 != 0:
         raise ValueError("Unexpected wg output format")
