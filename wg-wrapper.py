@@ -6,6 +6,7 @@
 import argparse
 import configparser
 import os
+from pathlib import Path
 import pprint
 import subprocess
 import sys
@@ -248,10 +249,29 @@ def generate_wg_keys(wg_config_path: str) -> None:
                 continue
 
     # Generate a new public and private wg-key and make sure only the user has permissions on the files
-    subprocess.check_output(
-        f"umask 077 && wg genkey | tee {wg_config_path}/private.key | wg pubkey > {wg_config_path}/public.key",
-        shell=True,
-    )
+    private_key = subprocess.run(
+        ["wg", "genkey"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+    public_key = subprocess.run(
+        ["wg", "pubkey"],
+        input=private_key,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+
+    private_path = Path(wg_config_path) / "private.key"
+    public_path = Path(wg_config_path) / "public.key"
+
+    private_path.write_text(private_key + "\n")
+    public_path.write_text(public_key + "\n")
+
+    os.chmod(private_path, 0o600)
+    os.chmod(public_path, 0o600)
 
     print("The keys are now generated and located here:")
     if os.path.isfile(f"{wg_config_path}/public.key"):
