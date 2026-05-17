@@ -34,13 +34,20 @@ def get_wg_peers(debug: bool) -> dict:
             f"\n{Bcolors.WARNING}DEBUG: list active peers from (wg show all peers):{Bcolors.ENDC}\n{active_wg_peers}"
         )
 
+
+    # Safety check: must be even number of elements
+    if len(active_wg_peers_list) % 2 != 0:
+        raise ValueError("Unexpected wg output format")
+
     # Create a dict with the active wg peers using the utun interface as key and pub-key as value.
     # This is used in other functions to be able to list, include and exclude active peers.
     wg_peers_dict = {}
-    i = 0
-    while i < len(active_wg_peers_list):
-        wg_peers_dict[active_wg_peers_list[i]] = active_wg_peers_list[i + 1]
-        i = i + 2
+    for i in range(0, len(active_wg_peers_list), 2):
+        interface = active_wg_peers_list[i]
+        pubkey = active_wg_peers_list[i + 1]
+
+        wg_peers_dict[interface] = pubkey
+
     if debug:
         print(
             f"\n{Bcolors.WARNING}DEBUG: wg_peers_dict content:\n{wg_peers_dict}{Bcolors.ENDC}"
