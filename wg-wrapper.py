@@ -119,12 +119,12 @@ def kill_active_tunnels(
     for file in config_files:
         peer = file.get("Peer")
         if not peer:
-            print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
+            print(f"\n{Bcolors.WARNING}WARNING: Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
             continue
 
         pubkey = peer.get("publickey")
         if not pubkey:
-            print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
+            print(f"\n{Bcolors.WARNING}WARNING: Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
             continue
 
         if pubkey not in active_pubkeys:
@@ -159,11 +159,11 @@ def start_all_tunnels(
             # Sanity checks
             peer = file.get("Peer")
             if not peer:
-                print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
+                print(f"\n{Bcolors.WARNING}WARNING: Skipping {file['filename']}: missing [Peer]{Bcolors.ENDC}\n")
                 continue
             pubkey = peer.get("publickey")
             if not pubkey:
-                print(f"\n{Bcolors.WARNING}Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
+                print(f"\n{Bcolors.WARNING}WARNING: Skipping {file['filename']}: missing 'PublicKey'{Bcolors.ENDC}\n")
                 continue
             # for active_peer in wg_peers_dict:
             if pubkey not in wg_peers_dict.values():
