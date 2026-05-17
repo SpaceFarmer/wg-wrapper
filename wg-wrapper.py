@@ -137,7 +137,7 @@ def kill_active_tunnels(
             )
             continue
 
-        file_shortname = file["filename"].split(".", 1)[0]
+        file_shortname = Path(file["filename"]).stem
         print(f"==Killing tunnel: {file_shortname}==")
 
         subprocess.run(
