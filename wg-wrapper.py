@@ -170,7 +170,7 @@ def start_all_tunnels(
             if pubkey not in wg_peers_dict.values():
                 # Exlude exceptions found in config.ini
                 if file["filename"] not in start_exceptions_list:
-                    file_shortname = file["filename"].split(".", 1)[0]
+                    file_shortname = Path(file["filename"]).stem
                     print(f"\nStarting tunnel: {file_shortname}")
                     try:
                         subprocess.check_output(
