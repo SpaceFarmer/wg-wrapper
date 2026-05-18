@@ -209,6 +209,15 @@ def list_wg_configfiles(config_files: list, wg_config_path: str) -> None:
     print(f"\n{Bcolors.OKCYAN}=============================={Bcolors.ENDC}")
 
 
+def warn_invalid_exceptions(exception_list: list, config_filenames: set, label: str):
+    """Print WARNING if configured exception does not match any config_filenames"""
+    for exc in exception_list:
+        if exc not in config_filenames:
+            print(
+                f"{Bcolors.WARNING}WARNING: {label} exception '{exc}' does not match any config file{Bcolors.ENDC}"
+            )
+
+
 def generate_wg_keys(wg_config_path: str) -> None:
     """Generates wg keys for use in a new wg tunnel"""
     print(f"\n{Bcolors.OKCYAN}===Generate new WireGuard keys==={Bcolors.ENDC}\n")
@@ -379,6 +388,18 @@ def main() -> None:
     if os.path.isdir(wg_config_path):
         # Parse the wg configfiles and get currently active peers used in the other functions
         config_files = parse_wg_config_files(wg_config_path, args.debug)
+        # Warning if you have exceptions configured that does not exist
+        config_filenames = {file["filename"] for file in config_files}
+        warn_invalid_exceptions(
+            start_exceptions_list,
+            config_filenames,
+            "StartAllTunnelsExceptions",
+        )
+        warn_invalid_exceptions(
+            kill_exceptions_list,
+            config_filenames,
+            "KillAllTunnelsExceptions",
+        )
     else:
         print(
             f"{Bcolors.FAIL}The path defined for wg config-files does not exist: {wg_config_path}{Bcolors.ENDC}"
